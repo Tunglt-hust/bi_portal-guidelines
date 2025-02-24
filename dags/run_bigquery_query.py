@@ -18,7 +18,7 @@ dag = DAG(
 
 # Push data to BigQuery using a bash command
 run_query_task = BashOperator(
-    task_id='push_data_to_bigquery',
+    task_id='run_query_in_bigquery',
     bash_command='python /home/airflow/scripts/query_runner.py',
     dag=dag,
 )
