@@ -7,6 +7,7 @@
 ## Features
 
 - **GitHub Sync:** Automatically sync files between a GitHub repository and the Airflow server.
+- **Create Dataset and Table in BigQuery:** Dynamically create datasets and tables if they don’t exist.
 - **Data Ingestion to BigQuery:** Push data from a Pandas DataFrame directly into BigQuery tables.
 - **Query Execution on BigQuery:** Run SQL queries on BigQuery, fetch results, and integrate them into your data workflows.
 
@@ -16,10 +17,12 @@
 ├── airflow/
 │   ├── dags/
 │   │   ├── sync_repo.py           # DAG to sync files between GitHub and Airflow
+│   │   ├── create_dataset.py      # DAG to create BigQuery datasets and tables
 │   │   ├── push_data_bigquery.py  # DAG to push DataFrame data to BigQuery
 │   │   └── run_bigquery_query.py  # DAG to execute SQL queries on BigQuery
 │   └── scripts/
 │       ├── data_ingestion.py      # Script for transforming and pushing data
+│       ├── dataset_creator.py     # Script for creating datasets and tables
 │       └── query_runner.py        # Script for executing queries and handling results
 └── README.md
 ```
@@ -31,12 +34,17 @@
 - Clones or pulls the latest changes from the specified GitHub repository.
 - Uses `rsync` to copy the updated files into the Airflow directory.
 
-### 2. Push Data to BigQuery
+### 2. Create Dataset and Table in BigQuery
+
+- Creates a BigQuery dataset if it doesn’t already exist.
+- Creates a table with specified schema, or skips creation if the table already exists.
+
+### 3. Push Data to BigQuery
 
 - Accepts a DataFrame and pushes it to a BigQuery table.
 - Configurable options for dataset, table name, and write mode (append, replace, etc.).
 
-### 3. Run BigQuery Query
+### 4. Run BigQuery Query
 
 - Executes SQL queries on BigQuery.
 - Retrieves and processes results for downstream tasks or reporting.
@@ -47,6 +55,7 @@
 
 ```bash
 airflow dags trigger sync_repo
+airflow dags trigger create_dataset
 airflow dags trigger push_data_bigquery
 airflow dags trigger run_bigquery_query
 ```
@@ -62,6 +71,7 @@ airflow dags list-runs --dag-id sync_repo
 
 - **GitHub Repository:** Configure the repository URL and local paths in the Airflow DAG.
 - **BigQuery Connection:** Set up BigQuery credentials using a service account key and define connection IDs in Airflow.
+- **Dataset and Table Schema:** Define the dataset and table schema directly in the DAG configuration.
 - **Schedule:** You can either run DAGs manually or set up a cron-based schedule.
 
 ## Environment Setup
@@ -94,7 +104,8 @@ This project is proprietary and confidential. Unauthorized copying, distribution
 
 ---
 
-With this setup, your BI Portal is ready to automate data workflows, keeping your code in sync and making BigQuery interactions seamless! 🚀
+With this setup, your BI Portal is ready to automate data workflows, keeping your code in sync, handling BigQuery datasets/tables, and making query execution seamless! 🚀
 
 Let me know if you’d like me to modify anything or add more details! ✌️
+
 
