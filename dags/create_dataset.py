@@ -11,14 +11,14 @@ default_args = {
 
 # Create DAG
 dag = DAG(
-    'push_data_bigquery',
+    'create_bigquery_dataset',
     default_args=default_args,
     catchup=False,
 )
 
 # Push data to BigQuery using a bash command
 create_dataset_task = BashOperator(
-    task_id='push_data_to_bigquery',
+    task_id='create_dataset_in_bigquery',
     bash_command='python /home/airflow/scripts/dataset_creator.py',
     dag=dag,
 )
