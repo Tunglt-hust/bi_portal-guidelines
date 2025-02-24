@@ -1,32 +1,26 @@
 from airflow import DAG
 from airflow.operators.bash import BashOperator
-from datetime import datetime, timedelta
+from airflow.utils.dates import days_ago
 
-# DAG configuration
+# Define default arguments
 default_args = {
-    "owner": "airflow",
-    "depends_on_past": False,
-    "start_date": datetime(2024, 2, 20),
-    "retries": 1,
-    "retry_delay": timedelta(minutes=5),
+    'owner': 'airflow',
+    'start_date': days_ago(1),
+    'retries': 1,
 }
 
+# Create DAG
 dag = DAG(
-    "create_dataset",
+    'push_data_bigquery',
     default_args=default_args,
     catchup=False,
 )
 
-# Task to create a BigQuery dataset using bq command
-create_dataset = BashOperator(
-    task_id="create_dataset",
-    bash_command="""
-    bq --location=US mk --dataset \
-    --description 'Dataset for BI Portal' \
-    your_project_id:your_dataset_name
-    """,
+# Push data to BigQuery using a bash command
+create_dataset_task = BashOperator(
+    task_id='push_data_to_bigquery',
+    bash_command='python /home/airflow/scripts/dataset_creator.py',
     dag=dag,
 )
 
-if __name__ == "__main__":
-    create_dataset
+create_dataset_task
